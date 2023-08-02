@@ -1,0 +1,23 @@
+erDiagram
+  User |{--|| Role : has
+  User ||..|| Status : has
+  User {
+    INT id PK "Auto incremented"
+    INT role_id FK "NOT NULL. references Role(id)"
+    UUID auth_id  "User ID from Auth provider"
+    VARCHAR_30 name "NOT NULL. User name"
+    VARCHAR_40 surname "NOT NULL. User surname"
+    TIMESTAMP created "DEFAULT NOW. AS :: 1999-01-08 04:05:06"
+  }
+  Role {
+    INT id PK "Auto incremented"
+    VARCHAR_30 title "NOT NULL. Roe definition"
+    TEXT description "NOT NULL. Role explanation"
+    JSONB contract "NOT NULL. Contract settings"
+    JSONB constrain "NOT NULL. Constrain settings"
+    TIMESTAMP created "DEFAULT NOW. AS :: 1999-01-08 04:05:06"
+  }
+  Status {
+    INT user_id FK "NOT NULL. references User(id)"
+    JSONB statuses "NOT NULL. Status values"
+  }

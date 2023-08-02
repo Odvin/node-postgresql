@@ -1,0 +1,263 @@
+openapi: 3.0.1
+info:
+  title: REST API for Onlineproperty-Server
+  description: Onlineproperty openApi 3.0.1 specification
+  version: '1.0.0'
+  contact:
+    email: od@onlineproperty.io
+servers:
+  - description: Localhost
+    url: http://localhost:4000
+tags:
+  - name: Users
+    description: Users information
+
+paths:
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Search users
+      operationId: getUser
+      description: |
+        Operations with users
+      security:
+        - userLoginBearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          description: User identifier
+          example: 39eab26c-8788-4375-810c-9807aaf98191
+          schema:
+            type: string
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+
+    post:
+      tags:
+        - Users
+      summary: Initiate a new user
+      operationId: createUser
+      description: |
+        Operations with users
+      security:
+        - userLoginBearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCredentials'
+      responses:
+        '201':
+          description: 'The user was initiated'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: 'string'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: User identifier
+                    example: 39eab26c-8788-4375-810c-9807aaf98191
+
+  /users-role:
+    get:
+      tags:
+        - Users
+      summary: Get the user role information
+      operationId: getUserRole
+      description: |
+        User role is provided by the contract. 
+        The contract is a JSON document with predefined options
+        depended on the user statuses or its logical expression
+      security:
+        - userLoginBearerAuth: []
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRole'
+
+  /users-status:
+    get:
+      tags:
+        - Users
+      summary: Get the user status information
+      operationId: getUserStatus
+      description: |
+        User status is defined by the user role.
+        The role contract and constrains depends on the user status.
+      security:
+        - userLoginBearerAuth: []
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserStatus'
+
+components:
+  schemas:
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          description: User identifier
+          example: 39eab26c-8788-4375-810c-9807aaf98191
+          format: uuid
+        name:
+          type: string
+          description: User first name
+          example: John
+        surname:
+          type: string
+          description: User second name
+          example: Doe
+        email:
+          type: string
+          example: jd@onlineproperty.io
+          description: User email
+
+    UserCredentials:
+      type: object
+      properties:
+        password:
+          type: string
+          description: User second name
+          example: Doe
+        email:
+          type: string
+          example: jd@onlineproperty.io
+          description: User email
+      required:
+        - password
+        - email
+
+    UserRole:
+      type: object
+      properties:
+        title:
+          type: string
+          description: User role name
+          example: broker
+        options:
+          type: array
+          items:
+            type: object
+            properties:
+              scope:
+                type: string
+                description: Page to apply
+                example: landing
+              information:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    component:
+                      type: string
+                      description: Visual component name
+                      example: alert
+                    required:
+                      type: array
+                      description: Required user statuses
+                      example: [activated, validated]
+                      items:
+                        type: string
+                    restricted:
+                      type: array
+                      description: Restricted user statuses
+                      example: [verified]
+                      items:
+                        type: string
+              actions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    action:
+                      type: string
+                      description: UI action name
+                      example: sendEmail
+                    required:
+                      type: array
+                      description: Required user statuses
+                      example: [activated, validated]
+                      items:
+                        type: string
+                    restricted:
+                      type: array
+                      description: Restricted user statuses
+                      example: [verified]
+                      items:
+                        type: string
+              api:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    fn:
+                      type: string
+                      description: API function name
+                      example: getUserStatus
+                    required:
+                      type: array
+                      description: Required user statuses
+                      example: [activated, validated]
+                      items:
+                        type: string
+                    restricted:
+                      type: array
+                      description: Restricted user statuses
+                      example: [verified]
+                      items:
+                        type: string
+              routs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    rout:
+                      type: string
+                      description: Route to the page
+                      example: payment
+                    required:
+                      type: array
+                      description: Required user statuses
+                      example: [activated, validated]
+                      items:
+                        type: string
+                    restricted:
+                      type: array
+                      description: Restricted user statuses
+                      example: [verified]
+                      items:
+                        type: string
+
+    UserStatus:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: true
+          description: Key for the particular user status
+
+  securitySchemes:
+    userLoginBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

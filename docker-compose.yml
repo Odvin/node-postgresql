@@ -1,0 +1,45 @@
+version: '3.5'
+
+services:
+  postgres-db:
+    container_name: postgres-db
+    image: 'postgres:15.3'
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    expose:
+      - ${POSTGRES_PORT}
+    volumes:
+      - postgres-store:/var/lib/pgsql/data
+      - ./src/databases/postgre/migrations:/usr/src/migrations
+    networks:
+      - node-postgre
+
+  api-server:
+    container_name: api-server
+    image: node:18.17.0
+    working_dir: /usr/src/api-server
+    env_file: .env
+    ports:
+      - $API_EXTERNAL_PORT:$API_PORT
+    expose:
+      - $API_EXTERNAL_PORT
+    volumes:
+      - ./:/usr/src/api-server
+    networks:
+      - node-postgre
+    command: npm run start:dev
+
+volumes:
+  postgres-store:
+    driver: local
+
+networks:
+  node-postgre:
+    name: dev-network
+    driver: bridge
