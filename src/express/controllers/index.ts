@@ -5,4 +5,7 @@ export * from './maintenance/serviceInfo';
 export * from './users/getUserCtr';
 export * from './users/createUserCtr';
 
+export * from './recipes/getIngredientsCtr';
+export * from './recipes/searchIngredientsCtr';
+
 export * from './errors';

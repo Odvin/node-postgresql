@@ -4,7 +4,7 @@ import morgan from 'morgan';
 
 import logger from '../logger';
 
-import { maintenance, users } from './routers';
+import { maintenance, users, recipes } from './routers';
 
 import { unhandled, errors } from './controllers';
 
@@ -26,6 +26,7 @@ app.use(express.json(parserOptions.json));
 app.use(express.urlencoded(parserOptions.urlencoded));
 
 // Routing
+app.use(recipes);
 app.use(users);
 
 // Service healthcheck

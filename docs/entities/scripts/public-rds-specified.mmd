@@ -1,0 +1,25 @@
+erDiagram
+  recipes ||..|| recipes_photos : describes
+  ingredients ||--|{ recipe_ingredients : constitute
+  recipes ||--|{ recipe_ingredients : contains
+  recipes {
+    INT recipe_id PK "GENERATED ALWAYS AS IDENTITY"
+    VARCHAR_225 title "UNIQUE NOT NULL. Recipe title"
+    TEXT body "Recipe description"
+  }
+  ingredients {
+    INT id PK "GENERATED ALWAYS AS IDENTITY"
+    VARCHAR_225 title "UNIQUE NOT NULL. Ingredient title"
+    VARCHAR_50 type "CHECK (type IN ('meat','fruit','vegetable','other'))"
+    VARCHAR_225 image "Image file name"
+  }
+  recipes_photos {
+    INT photo_id PK "GENERATED ALWAYS AS IDENTITY"
+    VARCHAR_225 url "NOT NULL. Photo url"
+    INT recipe_id FK "ON DELETE CASCADE. recipes(recipe_id))"
+  }
+  recipe_ingredients {
+    INT recipe_id FK "ON DELETE NO ACTION. recipes(recipe_id)"
+    INT ingredient_id FK "ON DELETE NO ACTION. ingredients(id)"
+    CONSTRAINT recipe_ingredients_pk PK "(recipe_id, ingredient_id)"
+  }

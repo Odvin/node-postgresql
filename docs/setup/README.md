@@ -35,13 +35,14 @@
    2. Make migrations (inside **onlineproperty-postgres** container)
 
       ```
-      psql -d postgres-db -U opDevUser < /usr/src/migrations/schema.up.sql
+      psql -d recipes -U opDevUser < /usr/src/migrations/recipes.up.sql
+      psql -d recipes -U opDevUser < /usr/src/migrations/schema.up.sql
       ```
 
    3. Connect to the database
 
       ```
-      psql -d postgres-db -U opDevUser
+      psql -d recipes -U opDevUser
       ```
 
 5. Run API server. Use another terminal do not close the process in the terminal that runs mongo cluster.

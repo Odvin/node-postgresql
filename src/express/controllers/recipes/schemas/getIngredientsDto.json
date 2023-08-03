@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "required": ["type"],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["vegetable", "fruit", "meat", "other"]
+    },
+    "lastId": {
+      "type": "string",
+      "pattern": "[0-9]"
+    }
+  }
+}

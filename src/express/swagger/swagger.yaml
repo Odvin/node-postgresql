@@ -1,18 +1,83 @@
 openapi: 3.0.1
 info:
-  title: REST API for Onlineproperty-Server
-  description: Onlineproperty openApi 3.0.1 specification
+  title: REST API for Node-PostgreSQL-Server
+  description: Node-PostgreSQL openApi 3.0.1 specification
   version: '1.0.0'
   contact:
-    email: od@onlineproperty.io
+    email: to@mail.io
 servers:
   - description: Localhost
     url: http://localhost:4000
 tags:
   - name: Users
     description: Users information
+  - name: Recipes
+    description: Recipes information
 
 paths:
+  /ingredients:
+    get:
+      tags:
+        - Recipes
+      summary: Returns list of the Ingredients
+      operationId: getIngredients
+      description: |
+        Ingredients filtered by the selected type
+      parameters:
+        - name: type
+          in: query
+          description: Ingredient type
+          example: vegetable
+          required: true
+          schema:
+            type: string
+            enum: [vegetable, fruit, meat, other]
+        - name: lastId
+          in: query
+          description: Ingredient id to start with
+          example: 10
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: Ingredients for the selected type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredients'
+
+  /ingredients-search:
+    get:
+      tags:
+        - Recipes
+      summary: Returns list of the Ingredients
+      operationId: searchIngredients
+      description: |
+        Ingredients filtered by the title and type
+      parameters:
+        - name: term
+          in: query
+          description: Substring to match in ingredient title or type
+          example: lem
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page from to start (the page contains up to 10 items)
+          example: 2
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: Ingredients that match search term
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredients'
+
   /users:
     get:
       tags:
@@ -111,6 +176,33 @@ paths:
 
 components:
   schemas:
+    Ingredients:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: Ingredient id
+            example: 1
+          title:
+            type: string
+            description: Ingredient title
+            example: butter
+          type:
+            type: string
+            description: Ingredient type
+            example: meat
+            enum: [vegetable, fruit, meat, other]
+          image:
+            type: string
+            description: File name for the ingredient
+            example: butter.jpg
+        required:
+          - id
+          - title
+          - type
+
     UserProfile:
       type: object
       properties:

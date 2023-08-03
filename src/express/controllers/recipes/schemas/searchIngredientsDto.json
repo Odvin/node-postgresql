@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "required": ["term"],
+  "additionalProperties": false,
+  "properties": {
+    "term": {
+      "type": "string"
+    },
+    "page": {
+      "type": "string",
+      "pattern": "[0-9]"
+    }
+  }
+}
