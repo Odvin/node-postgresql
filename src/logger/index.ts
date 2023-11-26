@@ -1,9 +1,9 @@
 import { createLogger, config } from 'winston';
 import { serviceName } from '../config';
 
-import { consoleTransport } from './transports';
+import { consoleTransport, lokiTransport } from './transports';
 
-const transports = [consoleTransport];
+const transports = [consoleTransport, lokiTransport];
 
 const logger = createLogger({
   defaultMeta: { service: serviceName },

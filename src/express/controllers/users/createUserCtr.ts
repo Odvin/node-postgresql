@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import createError from 'http-errors';
-
-import { ajv } from '../../utils';
+import { databaseResponseTimer } from '../maintenance/metrics';
+import { ajv, doSomeHeavyTask } from '../../utils';
+import logger from '../../../logger';
 
 import * as createUserDtoSchema from './schemas/createUserDto.json';
 
@@ -33,11 +34,16 @@ export async function createUserCtr(
       );
     }
 
-    // const id = await userService.createUser(req.body);
+    logger.info('User was created');
 
-    // res.json({ athlete_id });
+    const operationTimer = databaseResponseTimer.startTimer();
+    const timeTaken = await doSomeHeavyTask();
+    operationTimer({ operation: 'doSomeHeavyTask', success: 'true' });
 
-    res.json({ res: 'Ok' });
+    res.json({
+      status: 'success',
+      message: `Heavy task completed in ${timeTaken} ms`,
+    });
   } catch (e) {
     return next(e);
   }

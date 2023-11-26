@@ -1,12 +1,19 @@
-import express, { Express } from 'express';
+import express, { Express, Request, Response } from 'express';
+
 import cors from 'cors';
 import morgan from 'morgan';
+import responseTime from 'response-time';
 
 import logger from '../logger';
 
 import { maintenance, users, recipes } from './routers';
 
 import { unhandled, errors } from './controllers';
+
+import {
+  httpRequestTimer,
+  totalReqCounter,
+} from './controllers/maintenance/metrics';
 
 import {
   port,
@@ -24,6 +31,14 @@ app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
 
 app.use(express.json(parserOptions.json));
 app.use(express.urlencoded(parserOptions.urlencoded));
+app.use(
+  responseTime((req: Request, res: Response, time: number) => {
+    totalReqCounter.inc();
+    httpRequestTimer
+      .labels(req.method, req.url, res.statusCode.toString())
+      .observe(time);
+  }),
+);
 
 // Routing
 app.use(recipes);

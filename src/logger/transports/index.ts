@@ -1,3 +1,4 @@
 import consoleTransport from './ConsoleTransport';
+import lokiTransport from './LokiTransport';
 
-export { consoleTransport };
+export { consoleTransport, lokiTransport };

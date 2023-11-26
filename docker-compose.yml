@@ -20,6 +20,32 @@ services:
     networks:
       - node-postgre
 
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - node-postgre
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-oss
+    ports:
+      - 3000:3000
+    networks:
+      - node-postgre
+
+  loki:
+    container_name: loki
+    image: grafana/loki
+    ports:
+      - 3100:3100
+    networks:
+      - node-postgre
+
   api-server:
     container_name: api-server
     image: node:18.17.0

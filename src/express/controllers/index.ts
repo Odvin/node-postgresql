@@ -1,5 +1,6 @@
 export * from './maintenance/liveness';
 export * from './maintenance/readiness';
+export * from './maintenance/metrics';
 export * from './maintenance/serviceInfo';
 
 export * from './users/getUserCtr';
